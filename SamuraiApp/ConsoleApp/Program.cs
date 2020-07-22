@@ -18,8 +18,32 @@ namespace ConsoleApp
             //QueryFilters();
             //RetrieveAndUpdateSamurai();
             //RetrieveAndUpdateMultipleSamurais();
-            RetrieveAndDeleteSamurai();
+            //RetrieveAndDeleteSamurai();
+            //InsertBattle();
+            QueryAndUpdateBattle_Disconnected();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void QueryAndUpdateBattle_Disconnected()
+        {
+            var battle = _context.Battles.AsNoTracking().FirstOrDefault();
+            battle.EndDate = new DateTime(1560, 06, 30);
+            using (var newContextInstance = new SamuraiContext())
+            {
+                newContextInstance.Battles.Update(battle);
+                newContextInstance.SaveChanges();
+            }
+        }
+
+        private static void InsertBattle()
+        {
+            _context.Battles.Add(new Battle
+            {
+                Name = "Battle of Okehazma",
+                StartDate = new DateTime(1560, 05, 01),
+                EndDate = new DateTime(1560, 06, 15)
+            });
+            _context.SaveChanges();
         }
 
         private static void RetrieveAndDeleteSamurai()
