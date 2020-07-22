@@ -16,9 +16,17 @@ namespace ConsoleApp
             //InsertVariousTypes();
             //GetSamuraisSimpler();
             //QueryFilters();
-            RetrieveAndUpdateSamurai();
-            RetrieveAndUpdateMultipleSamurais();
+            //RetrieveAndUpdateSamurai();
+            //RetrieveAndUpdateMultipleSamurais();
+            RetrieveAndDeleteSamurai();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void RetrieveAndDeleteSamurai()
+        {
+            var samurai = _context.Samurais.Find(26);
+            _context.Samurais.Remove(samurai);
+            _context.SaveChanges();
         }
 
         private static void RetrieveAndUpdateMultipleSamurais()
