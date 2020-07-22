@@ -15,15 +15,34 @@ namespace ConsoleApp
             //InsertMultipleSamurais();
             //InsertVariousTypes();
             //GetSamuraisSimpler();
-            QueryFilters();
+            //QueryFilters();
+            RetrieveAndUpdateSamurai();
+            RetrieveAndUpdateMultipleSamurais();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void RetrieveAndUpdateMultipleSamurais()
+        {
+            var samurais = _context.Samurais.Skip(1).Take(3).ToList();
+            samurais.ForEach(s => s.Name += " the 1st");
+            _context.SaveChanges();
+        }
+
+        private static void RetrieveAndUpdateSamurai()
+        {
+            var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, "B%")).ToList();
+            foreach (Samurai s in samurais)
+            {
+                s.Name += " San";
+            }
+            _context.SaveChanges();
         }
 
         private static void QueryFilters()
         {
             //var samurais = _context.Samurais.Where(s => s.Name == "Bob").ToList();
-            //var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, "%B%")).ToList();
-            var samurais = _context.Samurais.Where(s => s.Name.Contains("B")).ToList();
+            var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, "%B%")).ToList();
+            //var samurais = _context.Samurais.Where(s => s.Name.Contains("B")).ToList();
             foreach (Samurai s in samurais)
             {
                 Console.WriteLine($"Found: {s.Name} with ID: {s.Id}");
