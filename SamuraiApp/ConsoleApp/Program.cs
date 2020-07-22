@@ -1,6 +1,7 @@
 ﻿using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using System;
+using System.Linq;
 
 namespace ConsoleApp
 {
@@ -12,7 +13,19 @@ namespace ConsoleApp
             //AddSamurai();
             InsertMultipleSamurais();
             InsertVariousTypes();
+            GetSamuraisSimpler();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void GetSamuraisSimpler()
+        {
+            //var samurais = context.Samurais.ToList();
+            var query = context.Samurais;
+            //var samurais = query.ToList();
+            foreach (var samurai in query)
+            {
+                Console.WriteLine(samurai.Name);
+            }
         }
 
         private static void InsertVariousTypes()
