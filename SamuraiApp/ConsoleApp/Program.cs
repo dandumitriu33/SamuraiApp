@@ -1,4 +1,5 @@
-﻿using SamuraiApp.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SamuraiApp.Data;
 using SamuraiApp.Domain;
 using System;
 using System.Linq;
@@ -7,20 +8,33 @@ namespace ConsoleApp
 {
     class Program
     {
-        private static SamuraiContext context = new SamuraiContext();
+        private static SamuraiContext _context = new SamuraiContext();
         static void Main(string[] args)
         {
             //AddSamurai();
-            InsertMultipleSamurais();
-            InsertVariousTypes();
-            GetSamuraisSimpler();
+            //InsertMultipleSamurais();
+            //InsertVariousTypes();
+            //GetSamuraisSimpler();
+            QueryFilters();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void QueryFilters()
+        {
+            //var samurais = _context.Samurais.Where(s => s.Name == "Bob").ToList();
+            //var samurais = _context.Samurais.Where(s => EF.Functions.Like(s.Name, "%B%")).ToList();
+            var samurais = _context.Samurais.Where(s => s.Name.Contains("B")).ToList();
+            foreach (Samurai s in samurais)
+            {
+                Console.WriteLine($"Found: {s.Name} with ID: {s.Id}");
+            }
+            
         }
 
         private static void GetSamuraisSimpler()
         {
             //var samurais = context.Samurais.ToList();
-            var query = context.Samurais;
+            var query = _context.Samurais;
             //var samurais = query.ToList();
             foreach (var samurai in query)
             {
@@ -32,8 +46,8 @@ namespace ConsoleApp
         {
             var samurai = new Samurai { Name = "KiChoRex" };
             var clan = new Clan { ClanName = "Imperial Clan" };
-            context.AddRange(samurai, clan);
-            context.SaveChanges();
+            _context.AddRange(samurai, clan);
+            _context.SaveChanges();
         }
 
         private static void InsertMultipleSamurais()
@@ -43,15 +57,17 @@ namespace ConsoleApp
             var samurai3 = new Samurai { Name = "Bill" };
             var samurai4 = new Samurai { Name = "Beer" };
             // can also pass as range a List<Samurai>
-            context.Samurais.AddRange(samurai, samurai2, samurai3, samurai4);
-            context.SaveChanges();
+            _context.Samurais.AddRange(samurai, samurai2, samurai3, samurai4);
+            _context.SaveChanges();
         }
 
         private static void AddSamurai()
         {
             var samurai = new Samurai { Name = "Jim" };
-            context.Samurais.Add(samurai);
-            context.SaveChanges();
+            _context.Samurais.Add(samurai);
+            _context.SaveChanges();
         }
+
+
     }
 }
