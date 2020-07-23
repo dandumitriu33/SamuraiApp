@@ -28,12 +28,68 @@ namespace ConsoleApp
             //AddQuoteToExistingSamuraiNotTracked(27);
             //AddQuoteToExistingSamuraiNotTracked_Easy(27);
             //EagerLoadSamuraiWithQuotes();
-            EagerLoadSamuraiWithQuotesFiltered();
+            //EagerLoadSamuraiWithQuotesFiltered();
+            //ProjectSomeProperties();
+            ProjectSamuraiWithQuotes();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void ProjectSamuraiWithQuotes()
+        {
+            //var somePropertiesWithQuotes = _context.Samurais
+            //    .Select(s => new { s.Id, s.Name, s.Quotes})
+            //    .ToList();
+            //var somePropertiesWithQuotes = _context.Samurais
+            //    .Select(s => new { s.Id, s.Name, 
+            //        HappyQuotes = s.Quotes.Where(q=>q.Text.Contains("happy")) })
+            //    .ToList();
+            var somePropertiesWithQuotes = _context.Samurais
+                .Select(s => new
+                {
+                    Samurai = s,
+                    HappyQuotes = s.Quotes.Where(q => q.Text.Contains("happy"))
+                })
+                .ToList();
+            foreach (var item in somePropertiesWithQuotes)
+            {
+                foreach (var quote in item.HappyQuotes)
+                {
+                    Console.WriteLine($"Select samurai: {item.Samurai.Id} {item.Samurai.Name}: {quote.Text}");
+                }
+                
+            }
+        }
+
+        private static void ProjectSomeProperties()
+        {
+            var someProperties = _context.Samurais.Select(s => new { s.Id, s.Name }).ToList();
+            var idsAndNames = _context.Samurais.Select(s => new IdAndName(s.Id, s.Name)).ToList();
+            foreach (var combo in someProperties)
+            {
+                Console.WriteLine($"Anonymous object: {combo.Id} {combo.Name}");
+            }
+            Console.WriteLine("------------------");
+            foreach (var item in idsAndNames)
+            {
+                Console.WriteLine($"Struct: {item.Id} {item.Name}");
+            }
+        }
+
+        public struct IdAndName
+        {
+            public IdAndName(int id, string name)
+            {
+                Id = id;
+                Name = name;
+            }
+            public int Id;
+            public string Name;
         }
 
         private static void EagerLoadSamuraiWithQuotesFiltered()
         {
+            // Include is a method for DbSet not other objects like Samurai, on Samurai it won't work
+            // Eager also loads the entire set
             var samuraiWithQuotes = _context.Samurais.Where(s => s.Name.Contains("Ky"))
                                                      .Include(s => s.Quotes).ToList();
             foreach (Samurai samurai in samuraiWithQuotes)
