@@ -34,8 +34,33 @@ namespace ConsoleApp
             //ExplicitLoadQuotes();
             //FilteringWithRelatedData();
             //ModifyingRelatedDataWhenTracked();
-            ModifyingRelatedDataWhenNotTracked();
+            //ModifyingRelatedDataWhenNotTracked();
+            //QueryUsingRawSql();
+            QueryUsingRawSqlWithInterpolation();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void QueryUsingRawSqlWithInterpolation()
+        {
+            // safer from SQL Injection than raw with '{name}' 
+            string name = "Jim";
+            var samurais = _context.Samurais
+                            .FromSqlInterpolated($"Select * from Samurais Where Name = {name}")
+                            .ToList();
+            foreach (Samurai samurai in samurais)
+            {
+                Console.WriteLine($"There is a match with: {samurai.Name} with ID {samurai.Id}");
+            }
+        }
+
+        private static void QueryUsingRawSql()
+        {
+            // only gets * all, can't do Select Name from Samurais - it's DbSet query
+            var samurais = _context.Samurais.FromSqlRaw("Select * from Samurais").ToList();
+            foreach (Samurai samurai in samurais)
+            {
+                Console.WriteLine($"{samurai.Name} has ID {samurai.Id}");
+            }
         }
 
         private static void ModifyingRelatedDataWhenNotTracked()
