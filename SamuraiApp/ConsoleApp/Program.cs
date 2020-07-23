@@ -22,9 +22,20 @@ namespace ConsoleApp
             //RetrieveAndDeleteSamurai();
             //InsertBattle();
             //QueryAndUpdateBattle_Disconnected();
-            InsertNewSamuraiWithQuote();
-            InsertNewSamuraiWithManyQuotes();
+            //InsertNewSamuraiWithQuote();
+            //InsertNewSamuraiWithManyQuotes();
+            //AddQuoteToExistingSamuraiWhileTracked();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void AddQuoteToExistingSamuraiWhileTracked()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name == "Kambei Shimada");
+            samurai.Quotes.Add(new Quote
+            {
+                Text = "I bet you're happy that I've saved you!"
+            });
+            _context.SaveChanges();
         }
 
         private static void InsertNewSamuraiWithManyQuotes()
