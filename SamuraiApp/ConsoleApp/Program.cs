@@ -31,8 +31,20 @@ namespace ConsoleApp
             //EagerLoadSamuraiWithQuotesFiltered();
             //ProjectSomeProperties();
             //ProjectSamuraiWithQuotes();
-            ExplicitLoadQuotes();
+            //ExplicitLoadQuotes();
+            FilteringWithRelatedData();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void FilteringWithRelatedData()
+        {
+            var samurais = _context.Samurais
+                            .Where(s => s.Quotes.Any(q => q.Text.Contains("happy")))
+                            .ToList();
+            foreach (Samurai samurai in samurais)
+            {
+                Console.WriteLine($"Samurai {samurai.Name} used the word \"happy\". We don't have the full quote, this is just a sub-query.");
+            } 
         }
 
         private static void ExplicitLoadQuotes()
