@@ -26,8 +26,35 @@ namespace ConsoleApp
             //InsertNewSamuraiWithManyQuotes();
             //AddQuoteToExistingSamuraiWhileTracked();
             //AddQuoteToExistingSamuraiNotTracked(27);
-            AddQuoteToExistingSamuraiNotTracked_Easy(27);
+            //AddQuoteToExistingSamuraiNotTracked_Easy(27);
+            //EagerLoadSamuraiWithQuotes();
+            EagerLoadSamuraiWithQuotesFiltered();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void EagerLoadSamuraiWithQuotesFiltered()
+        {
+            var samuraiWithQuotes = _context.Samurais.Where(s => s.Name.Contains("Ky"))
+                                                     .Include(s => s.Quotes).ToList();
+            foreach (Samurai samurai in samuraiWithQuotes)
+            {
+                foreach (Quote quote in samurai.Quotes)
+                {
+                    Console.WriteLine($"{samurai.Name}: {quote.Text}");
+                }
+            }
+        }
+
+        private static void EagerLoadSamuraiWithQuotes()
+        {
+            var samuraiWithQuotes = _context.Samurais.Include(s => s.Quotes).ToList();
+            foreach (Samurai samurai in samuraiWithQuotes)
+            {
+                foreach (Quote quote in samurai.Quotes)
+                {
+                    Console.WriteLine($"{samurai.Name}: {quote.Text}");
+                }
+            }
         }
 
         private static void AddQuoteToExistingSamuraiNotTracked_Easy(int samuraiId)
