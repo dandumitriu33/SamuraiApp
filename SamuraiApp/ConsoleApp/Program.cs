@@ -30,8 +30,29 @@ namespace ConsoleApp
             //EagerLoadSamuraiWithQuotes();
             //EagerLoadSamuraiWithQuotesFiltered();
             //ProjectSomeProperties();
-            ProjectSamuraiWithQuotes();
+            //ProjectSamuraiWithQuotes();
+            ExplicitLoadQuotes();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void ExplicitLoadQuotes()
+        {
+            var samurai = _context.Samurais.FirstOrDefault(s => s.Name.Contains("K"));
+            _context.Entry(samurai).Collection(s => s.Quotes).Load(); // for collections
+            _context.Entry(samurai).Reference(s => s.Horse).Load(); // for properties with just 1 thing
+            foreach (Quote quote in samurai.Quotes)
+            {
+                Console.WriteLine($"{samurai.Name}: {quote.Text}");
+            }
+            if (samurai.Horse != null)
+            {
+                Console.WriteLine($"{samurai.Name} is the owner of {samurai.Horse.Name}");
+            }
+            else
+            {
+                Console.WriteLine($"{samurai.Name} does not own a horse.");
+            }
+            
         }
 
         private static void ProjectSamuraiWithQuotes()
