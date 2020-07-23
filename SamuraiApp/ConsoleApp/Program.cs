@@ -32,8 +32,30 @@ namespace ConsoleApp
             //ProjectSomeProperties();
             //ProjectSamuraiWithQuotes();
             //ExplicitLoadQuotes();
-            FilteringWithRelatedData();
+            //FilteringWithRelatedData();
+            //ModifyingRelatedDataWhenTracked();
+            ModifyingRelatedDataWhenNotTracked();
             Console.WriteLine("Hello World!");
+        }
+
+        private static void ModifyingRelatedDataWhenNotTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes).FirstOrDefault(s => s.Id == 27);
+            var quote = samurai.Quotes[0];
+            quote.Text += " Did you hear that again? I've come to save you again.";
+            using(var newContext = new SamuraiContext())
+            {
+                //newContext.Quotes.Update(quote); // will send updates to all quotes, attach won't mark it as updated, EF Core can separate
+                newContext.Entry(quote).State = EntityState.Modified;
+                newContext.SaveChanges();
+            }
+        }
+
+        private static void ModifyingRelatedDataWhenTracked()
+        {
+            var samurai = _context.Samurais.Include(s => s.Quotes).FirstOrDefault(s => s.Id == 27);
+            samurai.Quotes[0].Text = "Did you hear that? I've come to save you.";
+            _context.SaveChanges();
         }
 
         private static void FilteringWithRelatedData()
